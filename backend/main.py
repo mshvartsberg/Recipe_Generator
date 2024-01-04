@@ -13,8 +13,12 @@ from database import (
     create_recipe,
     update_recipe,
     remove_recipe,
+    add_ingredient,
+    create_user,
+    fetch_user,
+    delete_ingredient,
 )
-origins = ['https://localhost:3000']
+origins = ['http://localhost:3000']
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -22,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+#Recipe API Calls:
 @app.get("/api/recipe")
 async def get_recipes(): 
     response = await fetch_recipes() 
@@ -54,3 +59,32 @@ async def delete_recipe(id):
     if response:
         return "Successfully deleted the recipe!"
     raise HTTPException(404, f"there is no recipe with this id {id}") 
+
+#User API Calls:
+@app.post("/api/user", response_model=User)
+async def post_user(user: User):
+    response = await create_user(user.model_dump()) 
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong")
+
+@app.put("/api/add_user_ingredient/{id}", response_model=User)
+async def add_user_ingredient(id, ingredient: Ingredient):
+    response = await add_ingredient(id,ingredient)
+    if response:
+        return response
+    raise HTTPException(404, f"there is no user with this id {id}") 
+
+@app.put("/api/delete_user_ingredient/{id}", response_model=User)
+async def delete_user_ingredient(id, name):
+    response = await delete_ingredient(id, name)
+    if response:
+        return response
+    raise HTTPException(404, f"there is no user with this id {id}") 
+
+@app.get("/api/user/{id}", response_model=User)
+async def get_user_by_id(id):
+    response = await fetch_user(id)
+    if response:
+        return response
+    raise HTTPException(404, f"there is no user item with this id {id}") 

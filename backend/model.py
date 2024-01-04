@@ -26,7 +26,9 @@ class Recipe(RecipeDB):
 
 
 class User(BaseModel):
+    #id: str | None = None
     name: str
+    email: str
     ingredients: List[Ingredient] = []
 
 
