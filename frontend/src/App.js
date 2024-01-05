@@ -4,7 +4,7 @@ import IngredientCard from './components/IngredientCard';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RecipeCard from './components/RecipeCard';
-
+import navValues from './navValues';
 
 function App() {
   const [ingredientList, setIngredientList] = useState([{}]); 
@@ -12,6 +12,8 @@ function App() {
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [refreshCount, setRefreshCount] = useState(0);
+  const [currentUser, setCurrentUser] =useState({});
+  const [currentPage, setCurrentPage] =useState(navValues.ingredients); //change default to welcome once it's made
   const id = '6594d98b606a2e3354ff81cc';
   const threshold = 0.5;
 
@@ -20,6 +22,7 @@ function App() {
     axios.get(`http://localhost:8000/api/user/${id}`) 
       .then(res => { 
         console.log(res.data);
+        setCurrentUser(res.data);
         setIngredientList(res.data.ingredients)
       })//.catch to give an error
   }, [refreshCount]); 
@@ -34,6 +37,7 @@ function App() {
   }; 
 
   const getRecipeHandler = () => {
+    setCurrentPage(navValues.recipesToCook);
     axios.get(`http://localhost:8000/api/recipes_to_cook/${id}?threshold=${threshold}`)
     .then(res => {
       console.log(res.data);
@@ -41,9 +45,12 @@ function App() {
       setRefreshCount(refreshCount + 1);
     })
   };
-  return (
+
+  if (currentPage == navValues.ingredients){
+    return(
+    //--------------------------------------ingredients component
     <div className="App">
-      <h1>User Name_______User Email</h1>
+      <h1>{currentUser.name}        {currentUser.email} </h1>
       <div className="card-body">
         <h3 className="card text-white bg-dark mb-3">Add an ingredient:</h3>
         <span className="card-text"> 
@@ -59,14 +66,20 @@ function App() {
           {ingredientList.map((ingredient) => (<IngredientCard 
           showDelete={true} id={id} ingredient={ingredient} refresher={setRefreshCount}/>))}
         </div>
-          <button onClick={getRecipeHandler}>Get Recipes!</button>
-        <div>
-          {recipeList.map((recipe) => (<RecipeCard 
-          id={id} recipe={recipe} refresher={setRefreshCount}/>))}
-        </div>
+          <button onClick={getRecipeHandler}>Get Recipes!</button> </div> 
       </div>
-    </div>
-  );
+    );}
+    else if (currentPage == navValues.recipesToCook){
+      return(
+  //----------------------------------------------------------------------- 
+        <div className="App">
+          <div>
+              {recipeList.map((recipe) => (<RecipeCard 
+              id={id} recipe={recipe} refresher={setRefreshCount}/>))}
+          </div>
+        </div>);
+    }    
+  
 }
 
 export default App;
