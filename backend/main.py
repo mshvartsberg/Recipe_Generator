@@ -38,7 +38,24 @@ async def get_recipe_by_id(id):
     if response:
         return response
     raise HTTPException(404, f"there is no todo item with this id {id}") 
-                           
+# returns all recipes that a user can cook based on a certain threshold
+# add so that it can tell the user which ingredients are missing and need to be bought
+@app.get("/api/recipes_to_cook/{user_id}")
+async def get_recipes_to_cook(user_id, threshold: float): 
+    #threshold represents a percent of ingredients that must match (.50 = 50%)
+    all_recipes = await fetch_recipes()
+    cook_recipes: List[Recipe] = []
+    user = await get_user_by_id(user_id)
+    for recipe in all_recipes:
+        count = 0
+        total_ingredients = len(recipe.ingredients)
+        for ingredient in recipe.ingredients:
+            for ing in user.ingredients:
+                if (ingredient.name == ing.name):
+                    count+=1
+        if (count/total_ingredients >= threshold):
+            cook_recipes.append(recipe)
+    return cook_recipes
 @app.post("/api/recipe", response_model=RecipeDB)
 async def post_recipe(recipe: RecipeDB):
     response = await create_recipe(recipe.model_dump()) 

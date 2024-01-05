@@ -1,3 +1,4 @@
+from typing import List
 from model import Recipe,PydanticObjectId, Ingredient, User
 #MongoDB driver
 import motor.motor_asyncio
@@ -16,7 +17,7 @@ async def fetch_recipe(id):
     return recipe
 
 async def fetch_recipes():
-    recipes = []
+    recipes: List[Recipe] = []
     cursor = collectionR.find({}) 
     async for document in cursor: 
         recipe = Recipe(**document)

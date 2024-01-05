@@ -3,14 +3,17 @@ import React, {useState, useEffect} from 'react';
 import IngredientCard from './components/IngredientCard';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import RecipeCard from './components/RecipeCard';
 
 
 function App() {
   const [ingredientList, setIngredientList] = useState([{}]); 
+  const [recipeList, setRecipeList] = useState([]); 
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [refreshCount, setRefreshCount] = useState(0);
   const id = '6594d98b606a2e3354ff81cc';
+  const threshold = 0.5;
 
   // read/update user's ingredients:
   useEffect(() => {
@@ -28,8 +31,16 @@ function App() {
       console.log(res);
       setRefreshCount(refreshCount + 1);
     })
-  }; //how does this call add_user_ingredient? and should it be put cuz im editting the user?
+  }; 
 
+  const getRecipeHandler = () => {
+    axios.get(`http://localhost:8000/api/recipes_to_cook/${id}?threshold=${threshold}`)
+    .then(res => {
+      console.log(res.data);
+      setRecipeList(res.data)
+      setRefreshCount(refreshCount + 1);
+    })
+  };
   return (
     <div className="App">
       <h1>User Name_______User Email</h1>
@@ -46,8 +57,12 @@ function App() {
         <h5 className="card text-white bg-dark mb-3">Your Ingredients:</h5>
         <div>
           {ingredientList.map((ingredient) => (<IngredientCard 
-          id={id} ingredient={ingredient} ingredientList={ingredientList} 
-          refresher={setRefreshCount}/>))}
+          showDelete={true} id={id} ingredient={ingredient} refresher={setRefreshCount}/>))}
+        </div>
+          <button onClick={getRecipeHandler}>Get Recipes!</button>
+        <div>
+          {recipeList.map((recipe) => (<RecipeCard 
+          id={id} recipe={recipe} refresher={setRefreshCount}/>))}
         </div>
       </div>
     </div>
