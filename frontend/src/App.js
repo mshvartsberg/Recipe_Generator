@@ -45,6 +45,9 @@ function App() {
       setRefreshCount(refreshCount + 1);
     })
   };
+  const btiHandler = () => {
+    setCurrentPage(navValues.ingredients);
+  }
 
   if (currentPage == navValues.ingredients){
     return(
@@ -77,6 +80,7 @@ function App() {
               {recipeList.map((recipe) => (<RecipeCard 
               id={id} recipe={recipe} refresher={setRefreshCount}/>))}
           </div>
+          <button onClick={btiHandler}>Back to Ingredients</button>
         </div>);
     }    
   
