@@ -11,7 +11,7 @@ function IngredientCard({showDelete, id, ingredient, refresher}){
         return(
             <div className = "card ingredient">
                 <div className = "card-body">
-                    <h3>{ingredient.name}</h3>
+                    <h4>{ingredient.name}</h4>
                     <h6>Amount: {ingredient.quantity} units</h6>
                     {showDelete &&
                     <button onClick={() => 

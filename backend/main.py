@@ -55,6 +55,16 @@ async def get_recipes_to_cook(user_id, threshold: float):
                     count+=1
         if (count/total_ingredients >= threshold):
             cook_recipes.append(recipe)
+        for ingredient in recipe.ingredients:
+            buyFlag = False
+            for ing in user.ingredients:
+                if (ing.name == ingredient.name):
+                    buyFlag = True
+                    break
+            if (buyFlag == False):
+                recipe.buyIngredients.append(ingredient)
+            else:
+                buyFlag = False
     return cook_recipes
 @app.post("/api/recipe", response_model=RecipeDB)
 async def post_recipe(recipe: RecipeDB):

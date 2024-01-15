@@ -46,7 +46,7 @@ function App() {
     })
   };
   const btiHandler = () => {
-    setCurrentPage(navValues.ingredients);
+    setCurrentPage(navValues.ingre);
   }
 
   if (currentPage == navValues.ingredients){
@@ -78,7 +78,7 @@ function App() {
         <div className="App">
           <div>
               {recipeList.map((recipe) => (<RecipeCard 
-              id={id} recipe={recipe} refresher={setRefreshCount}/>))}
+              id={id} recipe={recipe} refresher={setRefreshCount} showBuy={recipe.buyIngredients.length != 0}/>))}
           </div>
           <button onClick={btiHandler}>Back to Ingredients</button>
         </div>);

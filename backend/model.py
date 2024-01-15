@@ -22,7 +22,8 @@ class RecipeDB(BaseModel):
     ingredients: List[Ingredient] = []
 
 class Recipe(RecipeDB):
-    id: str | None = None #= Field(default_factory=PydanticObjectId, alias="_id")
+    id: str | None = None
+    buyIngredients: List[Ingredient] = []
 
 
 class User(BaseModel):
