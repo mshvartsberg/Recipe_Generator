@@ -3,7 +3,7 @@ from model import Recipe,PydanticObjectId, Ingredient, User
 #MongoDB driver
 import motor.motor_asyncio
 
-client = motor.motor_asyncio.AsyncIOMotorClient('mongodb+srv://meggan567:lm5d9889@cluster0.lpghgsq.mongodb.net/')
+client = motor.motor_asyncio.AsyncIOMotorClient('...')
 database = client.RecipeGenerator
 collectionR = database.Recipes
 collectionU = database.Users
